@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Descargando código del repositorio...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Construyendo la aplicación...'
+                sh 'docker build -t mi-aplicacion .'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Ejecutando pruebas...'
+                sh 'echo "Simulación de pruebas exitosas"'
+            }
+        }
+
+        stage('Deploy Simulation') {
+            steps {
+                echo 'Simulando despliegue de la aplicación...'
+                sh 'echo "Aplicación desplegada (simulación)"'
+            }
+        }
+
+    }
+}

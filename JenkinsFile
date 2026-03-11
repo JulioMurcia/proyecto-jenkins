@@ -10,16 +10,13 @@ pipeline {
 
         stage('Install dependencies') {
           steps {
-                sh 'docker run --rm -v $PWD:/app -w /app python:3.11 pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh '''
-                . venv/bin/activate
-                pytest
-                '''
+              sh 'pytest'
             }
         }
 
@@ -31,11 +28,7 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                sh '''
-                docker stop devops-container || true
-                docker rm devops-container || true
-                docker run -d -p 5000:5000 --name devops-container devops-app
-                '''
+                sh 'docker run -d -p 5000:5000 devops-app'
             }
         }
 

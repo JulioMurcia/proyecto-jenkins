@@ -11,11 +11,11 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                bat '''
-                docker run --rm ^
-                -v %cd%:/app ^
-                -w /app ^
-                python:3.11 ^
+                sh '''
+                docker run --rm \
+                -v $PWD:/app \
+                -w /app \
+                python:3.11 \
                 pip install -r requirements.txt
                 '''
             }
@@ -23,11 +23,11 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat '''
-                docker run --rm ^
-                -v %cd%:/app ^
-                -w /app ^
-                python:3.11 ^
+                sh '''
+                docker run --rm \
+                -v $PWD:/app \
+                -w /app \
+                python:3.11 \
                 pytest
                 '''
             }
@@ -35,15 +35,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t devops-app .'
+                sh 'docker build -t devops-app .'
             }
         }
 
         stage('Run Container') {
             steps {
-                bat '''
-                docker stop devops-app
-                docker rm devops-app
+                sh '''
+                docker stop devops-app || true
+                docker rm devops-app || true
                 docker run -d -p 5000:5000 --name devops-app devops-app
                 '''
             }
